@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <script src="/static/js/lib/vue.min.js"></script>
+</head>
+
+<body>
+  <div id='app'>
+    <div class='row'>
+      <div class='col-xs-2 text-center'>
+        <input type="text" id="comment" size="40" v-on:keyup.enter="logadd($event.target.value);$event.target.value=''">
+      </div>
+      <div class='col-xs-1 text-center'>{{tod}}</div>
+    </div>
+    <div v-for='value in values'>
+        &nbsp;{{value}}
+    </div>
+  </div>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
