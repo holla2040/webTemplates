@@ -11,7 +11,10 @@
 <body>
   <div id='app'>
     <div class='row'>
-      <div class='col-xs-4 text-center'>{{tod}}</div>
+      <div class='col-xs-2 text-center'>
+        <input type="text" id="comment" size="40" v-on:keyup.enter="logadd($event.target.value);$event.target.value=''">
+      </div>
+      <div class='col-xs-1 text-center'>{{tod}}</div>
     </div>
     <div v-for='value in values'>
         &nbsp;{{value}}

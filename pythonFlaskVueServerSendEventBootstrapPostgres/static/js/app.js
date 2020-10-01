@@ -10,7 +10,10 @@ var app = new Vue({
       data = JSON.parse(event['data']);
       this.tod = data.tod;
       this.values = data.values; 
-    }
+    },
+    logadd: function(entry) {
+      fetch('/logadd/'+entry);
+    },
   }
 });
 
