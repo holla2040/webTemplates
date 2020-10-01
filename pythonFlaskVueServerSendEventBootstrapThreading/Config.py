@@ -9,9 +9,11 @@ class Config:
         json.dump(self.settings,open(self.filename,'w'))
 
     def factory(self):
-        self.settings['db_host']        = "horton"
-        self.settings['db_dbname']      = "synsysco"
-        self.settings['db_table']       = "telemetry"
+        self.settings['db_host']        = "myhost"
+        self.settings['db_username']    = "myusername"
+        self.settings['db_password']    = "mypassword"
+        self.settings['db_database']    = "mydatabase"
+        self.settings['db_table']       = "mytable"
         self.save()
 
 if __name__ == "__main__":
