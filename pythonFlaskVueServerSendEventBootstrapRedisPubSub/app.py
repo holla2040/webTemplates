@@ -9,6 +9,8 @@ from flask import Flask,Response
 from flask import render_template
 
 dbmq_client = redis.Redis(config.settings['dbmq_host'])
+pubsub = dbmq_client.pubsub()
+pubsub.subscribe('event')
 
 app = Flask(__name__)
 opts = app.jinja_options.copy();
@@ -24,19 +26,21 @@ def index():
 def stream():
    return Response(_stream(), content_type='text/event-stream')
 
-@app.route('/logadd/<value>')
-def logadd(value):
-    dbmq_client.lpush(config.settings['dbmq_listkey'],"%s"%value)
-    return Response("logadd %s"%value, mimetype='text/plain')
-
 def _stream():
-    while True:
-        time.sleep(1.0)
-        values = []
-        list = dbmq_client.lrange(config.settings['dbmq_listkey'],0,-1)
-        for v in list:
-            values.append(v.decode('utf-8'))
-        yield ("event: system\ndata: %s\n\n"%json.dumps({'tod':time.strftime("%y/%m/%d-%H:%M:%S",time.localtime()),'values':values}))
+  timeout = 0
+  while True:
+    event = pubsub.get_message() 
+    if event:
+      try:
+        data = event['data'].decode()
+        yield ("event: system\ndata: %s\n\n"%json.dumps({'event':data}))
+      except:
+        # sometimes data isn't byte array
+        pass
+      # print(repr(data).decode())
+    if time.time() > timeout:
+      yield ("event: system\ndata: %s\n\n"%json.dumps({'tod':time.strftime("%y/%m/%d-%H:%M:%S",time.localtime())}))
+      timeout = time.time() + 1.0
 
 
 if __name__ == '__main__':
